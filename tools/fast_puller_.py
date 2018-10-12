@@ -50,11 +50,12 @@ parser.add_argument(
 parser.add_argument(
     '--directory', action='store', help='Where to save the image\'s files.')
 
+parser.add_argument(
+    '--platform', action='store', default='linux/amd64',
+    help=('Which platform image to pull for multi-platform manifest lists. '
+          'Formatted as os/arch.'))
+
 _THREADS = 8
-
-_PROCESSOR_ARCHITECTURE = 'amd64'
-
-_OPERATING_SYSTEM = 'linux'
 
 
 def main():
@@ -64,6 +65,12 @@ def main():
 
   if not args.name or not args.directory:
     logging.fatal('--name and --directory are required arguments.')
+    sys.exit(1)
+  if '/' not in args.platform:
+    logging.fatal('--platform must be specified in os/arch format.')
+    sys.exit(1)
+
+  os, arch = args.platform.split('/', 1)
 
   retry_factory = retry.Factory()
   retry_factory = retry_factory.WithSourceTransportCallable(httplib2.Http)
@@ -97,8 +104,8 @@ def main():
     with image_list.FromRegistry(name, creds, transport) as img_list:
       if img_list.exists():
         platform = image_list.Platform({
-            'architecture': _PROCESSOR_ARCHITECTURE,
-            'os': _OPERATING_SYSTEM,
+            'architecture': arch,
+            'os': os,
         })
         # pytype: disable=wrong-arg-types
         with img_list.resolve(platform) as default_child:

@@ -34,7 +34,7 @@ $ bazel run @containerregistry//:puller.par -- --help
 
 ```
 usage: puller.par [-h] [--name NAME] [--directory DIRECTORY]
-                  [--stderrthreshold STDERRTHRESHOLD]
+                  [--platform PLATFORM] [--stderrthreshold STDERRTHRESHOLD]
 
 Pull images from a Docker Registry, faaaaast.
 
@@ -44,6 +44,8 @@ optional arguments:
                         Supports fully-qualified tag or digest references.
   --directory DIRECTORY
                         Where to save the image's files.
+  --platform PLATFORM   Which platform image to pull for multi-platform manifest
+                        lists. Formatted as os/arch.
   --stderrthreshold STDERRTHRESHOLD
                         Write log events at or above this level to stderr.
 ```
