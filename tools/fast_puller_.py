@@ -45,10 +45,12 @@ parser.add_argument(
     '--name',
     action='store',
     help=('The name of the docker image to pull and save. '
-          'Supports fully-qualified tag or digest references.'))
+          'Supports fully-qualified tag or digest references.'),
+    required=True)
 
 parser.add_argument(
-    '--directory', action='store', help='Where to save the image\'s files.')
+    '--directory', action='store', help='Where to save the image\'s files.',
+    required=True)
 
 parser.add_argument(
     '--platform', action='store', default='linux/amd64',
@@ -63,9 +65,6 @@ def main():
   args = parser.parse_args()
   logging_setup.Init(args=args)
 
-  if not args.name or not args.directory:
-    logging.fatal('--name and --directory are required arguments.')
-    sys.exit(1)
   if '/' not in args.platform:
     logging.fatal('--platform must be specified in os/arch format.')
     sys.exit(1)
